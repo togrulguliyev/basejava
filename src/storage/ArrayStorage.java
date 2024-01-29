@@ -8,6 +8,7 @@ import java.util.Arrays;
  */
 public class ArrayStorage {
     private static final int STORAGE_LIMIT = 10000;
+
     private final Resume[] storage = new Resume[STORAGE_LIMIT];
     private int size;
 
@@ -22,11 +23,10 @@ public class ArrayStorage {
         return Arrays.copyOf(storage, size);
     }
 
-    public void update(Resume updatedResume){
-        String uuid = updatedResume.getUuid();
-        int index = getIndex(uuid);
+    public void update(Resume resume){
+        int index = getIndex(resume.getUuid());
         if (isExisting(index)){
-            storage[index] = updatedResume;
+            storage[index] = resume;
             return;
         }
 
@@ -39,19 +39,18 @@ public class ArrayStorage {
     }
 
     public void save(Resume r) {
-        String uuid = r.getUuid();
-        int index = getIndex(uuid);
-        if (isExisting(index)){
-            System.out.println("Storage contains this resume.");
-            return;
-        }
+        int index = getIndex(r.getUuid());
+
         if (size >= STORAGE_LIMIT){
             System.out.println("Storage overflow.");
-            return;
         }
-
-        storage[size] = r;
-        size++;
+        else if (isExisting(index)) {
+            System.out.println("Storage contains this resume.");
+        }
+        else{
+            storage[size] = r;
+            size++;
+        }
     }
 
     public Resume get(String uuid) {
@@ -84,6 +83,6 @@ public class ArrayStorage {
         return -1;
     }
     private boolean isExisting(int index){
-        return (index != -1);
+        return index != -1;
     }
 }
